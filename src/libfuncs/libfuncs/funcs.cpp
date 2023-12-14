@@ -59,9 +59,9 @@ void parseFile(const std::string& filename, Salary& salary) {
   //   }
 }
 
-void getEmpoyeeByMonth(const size_t month) {
-  Salary salary;
-  parseFile("./data.txt", salary);
+void getEmpoyeeByMonth(const size_t month, const Salary& salary) {
+  // Salary salary;
+  // parseFile("./data.txt", salary);
 
   for (const auto& entry : salary) {
     const auto& key = entry.first;
@@ -96,7 +96,7 @@ void calculateOverAllAndAverageSalary(
 }
 
 void newFile(const Salary& salary) {
-  std::ofstream file("./datadir/newfile.txt", std::ios::app);
+  std::ofstream file("./newfile.txt", std::ios::app);
 
   for (const auto& entry : salary) {
     const auto& key = entry.first;
@@ -109,5 +109,75 @@ void newFile(const Salary& salary) {
 
     file << key.first << " " << key.second << " " << salaryPerYear << '\n';
   }
+}
+
+void addLinesInFile(const std::string& filename) {
+  std::ofstream file(filename, std::ios::app);
+  std::string line;
+
+  std::cout << "Enter line: ";
+  std::getline(std::cin, line);
+  file << line << '\n';
+}
+
+void deleteLines(const std::string& filename, Salary& salary) {
+  std::string deleteLine;
+
+  std::cout << "Enter employee to delete: ";
+  std::getline(std::cin, deleteLine);
+
+  for (auto it = salary.begin(); it != salary.end();) {
+    if (it->first.first == deleteLine) {
+      it = salary.erase(it);
+    } else {
+      ++it;
+    }
+  }
+
+  std::ofstream temp("temp.txt");
+  for (const auto& entry : salary) {
+    const auto& key = entry.first;
+    const auto& salaries = entry.second;
+
+    temp << key.first << " " << key.second << " ";
+    for (const auto& i : salaries) {
+      temp << i << " ";
+    }
+    temp << '\n';
+  }
+
+  remove(filename.c_str());
+  rename("temp.txt", filename.c_str());
+}
+
+void changeLines(const std::string& filename) {
+  std::string changeLine, newOffice;
+
+  std::cout << "Enter employee to change: ";
+  std::getline(std::cin, changeLine);
+
+  std::cout << "Enter new office: ";
+  std::getline(std::cin, newOffice);
+
+  std::string tempLine;
+  std::ifstream file(filename);
+  std::ofstream temp("temp.txt");
+  while (std::getline(file, tempLine)) {
+    std::vector<std::string> tempVec;
+    splitByWords(tempLine, tempVec);
+    std::string str = tempVec[0] + " " + tempVec[1];
+    if (str == changeLine) {
+      tempVec[2] = newOffice;
+      for (const auto& i : tempVec) {
+        temp << i << " ";
+      }
+      temp << '\n';
+    } else {
+      temp << tempLine << '\n';
+    }
+  }
+
+  remove(filename.c_str());
+  rename("temp.txt", filename.c_str());
 }
 }  // namespace altsu

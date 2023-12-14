@@ -27,9 +27,15 @@ void splitByWords(const std::string& line, std::vector<std::string>& words);
 
 void parseFile(const std::string& filename, Salary& salary);
 
-void getEmpoyeeByMonth(const size_t month);
+void getEmpoyeeByMonth(const size_t month, const Salary& salary);
 
 void calculateOverAllAndAverageSalary(const size_t month, const Salary& salary);
 
 void newFile(const Salary& salary);
+
+void addLinesInFile(const std::string& filename);
+
+void deleteLines(const std::string& filename, Salary& salary);
+
+void changeLines(const std::string& filename);
 }  // namespace altsu
